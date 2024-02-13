@@ -7,7 +7,7 @@ const MainNavigation = () => {
         <ul className={classes.list}>
           <li>
             <NavLink
-              to="/"
+              to=""
               className={({ isActive }) =>
                 isActive ? classes.active : undefined
               }
@@ -18,12 +18,22 @@ const MainNavigation = () => {
           </li>
           <li>
             <NavLink
-              to="/video"
+              to="video"
               className={({ isActive }) =>
                 isActive ? classes.active : undefined
               }
             >
               Video Page
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="waterProject"
+              className={({ isActive }) =>
+                isActive ? classes.active : undefined
+              }
+            >
+              Water Page
             </NavLink>
           </li>
         </ul>

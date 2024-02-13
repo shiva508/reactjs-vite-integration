@@ -12,6 +12,8 @@ import HomePage from "./components/HomePage";
 import VideoPage from "./components/VideoPage";
 import RootLayout from "./components/RootLayout";
 import ErrorPage from "./components/ErrorPage";
+import WaterProject from "./components/WaterProject";
+import WaterProjectDetails from "./components/WaterProjectDetails";
 
 // const routeDefination = createRoutesFromElements(
 //   <Route>
@@ -19,14 +21,29 @@ import ErrorPage from "./components/ErrorPage";
 //     <Route path="/video" element={<VideoPage />}></Route>
 //   </Route>
 // );
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <RootLayout />,
+//     errorElement: <ErrorPage />,
+//     children: [
+//       { path: "/", element: <HomePage /> },
+//       { path: "/video", element: <VideoPage /> },
+//       { path: "/waterProject", element: <WaterProject /> },
+//       { path: "/waterProject/:id", element: <WaterProjectDetails /> },
+//     ],
+//   },
+// ]);
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/", element: <HomePage /> },
-      { path: "/video", element: <VideoPage /> },
+      { index: true, element: <HomePage /> },
+      { path: "video", element: <VideoPage /> },
+      { path: "waterProject", element: <WaterProject /> },
+      { path: "waterProject/:id", element: <WaterProjectDetails /> },
     ],
   },
 ]);
