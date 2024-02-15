@@ -4,11 +4,13 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import EventsPage from "./pages/EventsPage";
-import EventDetailPage from "./pages/EventDetailPage";
-import NewEventPage from "./pages/NewEventPage";
+import EventsPage, { eventsLoader } from "./pages/EventsPage";
+import EventDetailPage, { eventByIdLoader } from "./pages/EventDetailPage";
+import NewEventPage, { addNewEventAction } from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
 import RootComponent from "./pages/RootComponent";
+import EventRoot from "./pages/EventRoot";
+import ErrorPage from "./pages/ErrorPage";
 
 // Challenge / Exercise
 
@@ -36,30 +38,53 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RootComponent />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       {
-        path: "/events",
-        element: <EventsPage />,
-      },
-      {
-        path: "/events/:eventId",
-        element: <EventDetailPage />,
-      },
-      {
-        path: "/events/new",
-        element: <NewEventPage />,
-      },
-      {
-        path: "/events/:eventId/edit",
-        element: <EditEventPage />,
+        path: "events",
+        element: <EventRoot />,
+        children: [
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventsLoader,
+            // loader: async () => {
+            //   const response = await fetch("http://localhost:8080/events");
+
+            //   if (!response.ok) {
+            //   } else {
+            //     const resData = await response.json();
+            //     return resData.events;
+            //   }
+            // },
+          },
+          {
+            path: ":eventId",
+            loader: eventByIdLoader,
+            id: "event-details",
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage />,
+              },
+              {
+                path: "edit",
+                element: <EditEventPage />,
+              },
+            ],
+          },
+          {
+            path: "new",
+            element: <NewEventPage />,
+            action: addNewEventAction,
+          },
+        ],
       },
     ],
   },
 ]);
 function App() {
-  const [count, setCount] = useState(0);
-
   return <RouterProvider router={router}></RouterProvider>;
 }
 
