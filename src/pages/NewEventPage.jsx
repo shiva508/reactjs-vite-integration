@@ -1,4 +1,4 @@
-import { Link, json } from "react-router-dom";
+import { json, redirect } from "react-router-dom";
 import EventForm from "../components/EventForm";
 const NewEventPage = () => {
   return (
@@ -29,7 +29,9 @@ export async function addNewEventAction({ request, params }) {
     },
     body: JSON.stringify(enteredData),
   });
-
+  if (response.status == 422) {
+    return response;
+  }
   if (!response.ok) {
     // return { isError: true, message: "Something went wrong" };
     // throw { message: "Something went wrong!" };
@@ -39,6 +41,6 @@ export async function addNewEventAction({ request, params }) {
     console.log(response);
     throw json({ message: response.statusText }, { status: response.status });
   } else {
-    return response;
+    return redirect("/events");
   }
 }
