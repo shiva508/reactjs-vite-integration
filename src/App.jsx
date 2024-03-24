@@ -1,31 +1,53 @@
 import "./App.css";
-import Hero from "./components/Hero";
-import HomeCards from "./components/HomeCards";
-import JobListings from "./components/JobListings";
-import Navbar from "./components/Navbar";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import MainLayout from "./layouts/MainLayout";
+import JobsPage from "./pages/JobsPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import JobPage, { jobLoder } from "./pages/JobPage";
+import AddJobPage from "./pages/AddJobPage";
 
 function App() {
-  return (
-    <>
-      <Navbar />
-      {/* <!-- Hero --> */}
-      <Hero title="I am the Hero" subTitle="I am the Vilon" />
+  const addNewJobHandler = async (newJob) => {
+    const res = await fetch("/api/jobs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newJob),
+    });
 
-      {/* <!-- Developers and Employers --> */}
-      <HomeCards />
+    return;
+  };
 
-      {/* <!-- Browse Jobs --> */}
-      <JobListings />
-      <section className="m-auto max-w-lg my-10 px-6">
-        <a
-          href="jobs.html"
-          className="block bg-black text-white text-center py-4 px-6 rounded-xl hover:bg-gray-700"
-        >
-          View All Jobs
-        </a>
-      </section>
-    </>
-  );
+  const deleteJob = async (id) => {
+    const res = await fetch(`/api/jobs/${id}`, {
+      method: "DELETE",
+    });
+    return;
+  };
+  const router = createBrowserRouter([
+    {
+      path: "",
+      element: <MainLayout />,
+
+      children: [
+        { index: true, element: <HomePage /> },
+        { path: "/jobs", element: <JobsPage /> },
+        {
+          path: "/jobs/:id",
+          element: <JobPage deleteJob={deleteJob} />,
+          loader: jobLoder,
+        },
+        {
+          path: "/add-job",
+          element: <AddJobPage addJobSubmit={addNewJobHandler} />,
+        },
+        { path: "*", element: <NotFoundPage /> },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
